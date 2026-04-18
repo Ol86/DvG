@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package dvg;
+
+service RechnungService {
+  rpc CreateRechnung (RechnungCreateRequest) returns (RechnungCreateResponse);
+  rpc GetRechnungById (RechnungIdRequest) returns (RechnungIdResponse);
+  rpc MarkRechnungAsPaid (RechnungPaiedRequest) returns (RechnungPaiedResponse);
+}
+
+message RechnungCreateRequest {
+  int32 id = 1;
+  string aussteller = 2;
+  string empfaenger = 3;
+  double betrag = 4;
+  string ausstellungsdatum = 5;
+  bool ist_bezahlt = 6;
+}
+
+message RechnungCreateResponse {
+  int32 id = 1;
+}
+
+message RechnungIdRequest {
+  int32 id = 1;
+}
+
+message RechnungIdResponse {
+  string aussteller = 1;
+  string empfaenger = 2;
+  double betrag = 3;
+  string ausstellungsdatum = 4;
+  bool ist_bezahlt = 5;
+}
+
+message RechnungPaiedRequest {
+  int32 id = 1;
+}
+
+message RechnungPaiedResponse {
+  bool success = 1;
+}
