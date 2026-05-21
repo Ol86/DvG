@@ -1,11 +1,11 @@
 syntax = "proto3";
 
-package dvg;
+package config;
 
 service RechnungService {
-  rpc CreateRechnung (RechnungCreateRequest) returns (RechnungCreateResponse);
-  rpc GetRechnungById (RechnungIdRequest) returns (RechnungIdResponse);
-  rpc MarkRechnungAsPaid (RechnungPaiedRequest) returns (RechnungPaiedResponse);
+  rpc CreateRechnung(RechnungCreateRequest) returns (RechnungCreateResponse);
+  rpc GetRechnungById(RechnungIdRequest) returns (RechnungIdResponse);
+  rpc MarkRechnungAsPaid(RechnungPaiedRequest) returns (RechnungPaiedResponse);
 }
 
 message RechnungCreateRequest {

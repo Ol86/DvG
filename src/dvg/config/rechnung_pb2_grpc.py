@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-from dvg import rechnung_pb2 as dvg_dot_rechnung__pb2
+from dvg.config import rechnung_pb2 as dvg_dot_config_dot_rechnung__pb2
 
 GRPC_GENERATED_VERSION = '1.80.0'
 GRPC_VERSION = grpc.__version__
@@ -18,7 +18,7 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + ' but the generated code in dvg/rechnung_pb2_grpc.py depends on'
+        + ' but the generated code in dvg/config/rechnung_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
@@ -35,19 +35,19 @@ class RechnungServiceStub(object):
             channel: A grpc.Channel.
         """
         self.CreateRechnung = channel.unary_unary(
-                '/dvg.RechnungService/CreateRechnung',
-                request_serializer=dvg_dot_rechnung__pb2.RechnungCreateRequest.SerializeToString,
-                response_deserializer=dvg_dot_rechnung__pb2.RechnungCreateResponse.FromString,
+                '/config.RechnungService/CreateRechnung',
+                request_serializer=dvg_dot_config_dot_rechnung__pb2.RechnungCreateRequest.SerializeToString,
+                response_deserializer=dvg_dot_config_dot_rechnung__pb2.RechnungCreateResponse.FromString,
                 _registered_method=True)
         self.GetRechnungById = channel.unary_unary(
-                '/dvg.RechnungService/GetRechnungById',
-                request_serializer=dvg_dot_rechnung__pb2.RechnungIdRequest.SerializeToString,
-                response_deserializer=dvg_dot_rechnung__pb2.RechnungIdResponse.FromString,
+                '/config.RechnungService/GetRechnungById',
+                request_serializer=dvg_dot_config_dot_rechnung__pb2.RechnungIdRequest.SerializeToString,
+                response_deserializer=dvg_dot_config_dot_rechnung__pb2.RechnungIdResponse.FromString,
                 _registered_method=True)
         self.MarkRechnungAsPaid = channel.unary_unary(
-                '/dvg.RechnungService/MarkRechnungAsPaid',
-                request_serializer=dvg_dot_rechnung__pb2.RechnungPaiedRequest.SerializeToString,
-                response_deserializer=dvg_dot_rechnung__pb2.RechnungPaiedResponse.FromString,
+                '/config.RechnungService/MarkRechnungAsPaid',
+                request_serializer=dvg_dot_config_dot_rechnung__pb2.RechnungPaiedRequest.SerializeToString,
+                response_deserializer=dvg_dot_config_dot_rechnung__pb2.RechnungPaiedResponse.FromString,
                 _registered_method=True)
 
 
@@ -77,24 +77,24 @@ def add_RechnungServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'CreateRechnung': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateRechnung,
-                    request_deserializer=dvg_dot_rechnung__pb2.RechnungCreateRequest.FromString,
-                    response_serializer=dvg_dot_rechnung__pb2.RechnungCreateResponse.SerializeToString,
+                    request_deserializer=dvg_dot_config_dot_rechnung__pb2.RechnungCreateRequest.FromString,
+                    response_serializer=dvg_dot_config_dot_rechnung__pb2.RechnungCreateResponse.SerializeToString,
             ),
             'GetRechnungById': grpc.unary_unary_rpc_method_handler(
                     servicer.GetRechnungById,
-                    request_deserializer=dvg_dot_rechnung__pb2.RechnungIdRequest.FromString,
-                    response_serializer=dvg_dot_rechnung__pb2.RechnungIdResponse.SerializeToString,
+                    request_deserializer=dvg_dot_config_dot_rechnung__pb2.RechnungIdRequest.FromString,
+                    response_serializer=dvg_dot_config_dot_rechnung__pb2.RechnungIdResponse.SerializeToString,
             ),
             'MarkRechnungAsPaid': grpc.unary_unary_rpc_method_handler(
                     servicer.MarkRechnungAsPaid,
-                    request_deserializer=dvg_dot_rechnung__pb2.RechnungPaiedRequest.FromString,
-                    response_serializer=dvg_dot_rechnung__pb2.RechnungPaiedResponse.SerializeToString,
+                    request_deserializer=dvg_dot_config_dot_rechnung__pb2.RechnungPaiedRequest.FromString,
+                    response_serializer=dvg_dot_config_dot_rechnung__pb2.RechnungPaiedResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'dvg.RechnungService', rpc_method_handlers)
+            'config.RechnungService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('dvg.RechnungService', rpc_method_handlers)
+    server.add_registered_method_handlers('config.RechnungService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
@@ -115,9 +115,9 @@ class RechnungService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/dvg.RechnungService/CreateRechnung',
-            dvg_dot_rechnung__pb2.RechnungCreateRequest.SerializeToString,
-            dvg_dot_rechnung__pb2.RechnungCreateResponse.FromString,
+            '/config.RechnungService/CreateRechnung',
+            dvg_dot_config_dot_rechnung__pb2.RechnungCreateRequest.SerializeToString,
+            dvg_dot_config_dot_rechnung__pb2.RechnungCreateResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -142,9 +142,9 @@ class RechnungService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/dvg.RechnungService/GetRechnungById',
-            dvg_dot_rechnung__pb2.RechnungIdRequest.SerializeToString,
-            dvg_dot_rechnung__pb2.RechnungIdResponse.FromString,
+            '/config.RechnungService/GetRechnungById',
+            dvg_dot_config_dot_rechnung__pb2.RechnungIdRequest.SerializeToString,
+            dvg_dot_config_dot_rechnung__pb2.RechnungIdResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -169,9 +169,9 @@ class RechnungService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/dvg.RechnungService/MarkRechnungAsPaid',
-            dvg_dot_rechnung__pb2.RechnungPaiedRequest.SerializeToString,
-            dvg_dot_rechnung__pb2.RechnungPaiedResponse.FromString,
+            '/config.RechnungService/MarkRechnungAsPaid',
+            dvg_dot_config_dot_rechnung__pb2.RechnungPaiedRequest.SerializeToString,
+            dvg_dot_config_dot_rechnung__pb2.RechnungPaiedResponse.FromString,
             options,
             channel_credentials,
             insecure,
