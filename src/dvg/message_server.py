@@ -4,7 +4,7 @@ import time
 import grpc
 import pika
 
-from . import rechnung_pb2, rechnung_pb2_grpc
+from dvg.config import rechnung_pb2, rechnung_pb2_grpc
 
 connection = pika.BlockingConnection(
     pika.ConnectionParameters("localhost"),

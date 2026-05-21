@@ -7,7 +7,7 @@ from grpc_tools.protoc import main
 
 def run():
     os.chdir(Path(os.path.dirname(__file__)).parent)
-    proto_file = f"./dvg/{sys.argv[1]}.proto"
+    proto_file = f"./dvg/config/{sys.argv[1]}.proto"
     print(f"Compiling: {proto_file}")
     main(
         [

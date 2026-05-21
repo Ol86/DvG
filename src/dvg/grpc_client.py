@@ -3,7 +3,7 @@ import sys
 import grpc
 import pika
 
-from . import rechnung_pb2, rechnung_pb2_grpc
+from dvg.config import rechnung_pb2, rechnung_pb2_grpc
 
 GRPC_SERVER_ADDRESS = "localhost:50051"
 

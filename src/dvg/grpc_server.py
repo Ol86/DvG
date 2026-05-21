@@ -4,7 +4,9 @@ from datetime import datetime
 
 import grpc
 
-from . import rechnung_pb2, rechnung_pb2_grpc
+from dvg.config import rechnung_pb2, rechnung_pb2_grpc
+
+DB_URL = "data/rechnungen.db"
 
 
 class RechnungService(rechnung_pb2_grpc.RechnungServiceServicer):
@@ -54,7 +56,7 @@ def serve() -> None:
 
 
 def _init_db() -> None:
-    conn = sqlite3.connect("data/rechnungen.db")
+    conn = sqlite3.connect(DB_URL)
     cursor = conn.cursor()
     cursor.execute(
         """
@@ -73,7 +75,7 @@ def _init_db() -> None:
 
 
 def _create_rechnung(aussteller: str, empfaenger: str, betrag: float) -> int | None:
-    conn = sqlite3.connect("data.db")
+    conn = sqlite3.connect(DB_URL)
     cursor = conn.cursor()
     db = cursor.execute(
         "INSERT INTO rechnungen (aussteller, empfaenger, betrag, ausstellungsdatum) VALUES (?, ?, ?, ?)",
@@ -85,7 +87,7 @@ def _create_rechnung(aussteller: str, empfaenger: str, betrag: float) -> int | N
 
 
 def _get_rechnung_by_id(rechnung_id: int) -> dict:
-    conn = sqlite3.connect("data.db")
+    conn = sqlite3.connect(DB_URL)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM rechnungen WHERE id = ?", (rechnung_id,))
     row = cursor.fetchone()
@@ -102,7 +104,7 @@ def _get_rechnung_by_id(rechnung_id: int) -> dict:
 
 
 def _get_all_rechnungen() -> list:
-    conn = sqlite3.connect("data.db")
+    conn = sqlite3.connect(DB_URL)
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM rechnungen")
     rows = cursor.fetchall()
@@ -121,7 +123,7 @@ def _get_all_rechnungen() -> list:
 
 
 def _update_rechnung(rechnung_id: int, ist_bezahlt: bool) -> None:
-    conn = sqlite3.connect("data.db")
+    conn = sqlite3.connect(DB_URL)
     cursor = conn.cursor()
     cursor.execute(
         "UPDATE rechnungen SET ist_bezahlt = ? WHERE id = ?",
