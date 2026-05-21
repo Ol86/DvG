@@ -5,7 +5,8 @@ from pathlib import Path
 from grpc_tools.protoc import main
 
 
-def run():
+def run() -> None:
+    """Run the proto compiler to generate Python code from the .proto file."""
     os.chdir(Path(os.path.dirname(__file__)).parent)
     proto_file = f"./dvg/config/{sys.argv[1]}.proto"
     print(f"Compiling: {proto_file}")

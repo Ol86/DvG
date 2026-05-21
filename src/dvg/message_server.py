@@ -10,15 +10,24 @@ connection = pika.BlockingConnection(
     pika.ConnectionParameters("localhost"),
 )
 channel = connection.channel()
+"""The RabbitMQ channel for consuming messages."""
 
 channel.queue_declare(
     queue="rechnung_queue",
     durable=True,
     arguments={"x-queue-type": "quorum"},
 )
+"""The RabbitMQ queue for consuming messages."""
 
 
-def callback(ch, method, properties, body):
+def callback(ch, method, properties, body) -> None:
+    """Callback function to process messages from the RabbitMQ queue.
+
+    :param ch: The RabbitMQ channel.
+    :param method: The method frame containing delivery information.
+    :param properties: The properties of the message.
+    :param body: The body of the message, containing the data to process.
+    """
     message = ast.literal_eval(body.decode())
     print(f"Processing message: {message}")
     time.sleep(10)
@@ -34,6 +43,7 @@ def callback(ch, method, properties, body):
 
 
 def run() -> None:
+    """Run the message server."""
     channel.basic_qos(prefetch_count=1)
     channel.basic_consume(queue="rechnung_queue", on_message_callback=callback)
     print("Waiting for messages. To exit press CTRL+C")

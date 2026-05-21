@@ -6,20 +6,24 @@ import pika
 from dvg.config import rechnung_pb2, rechnung_pb2_grpc
 
 GRPC_SERVER_ADDRESS = "localhost:50051"
+"""The address of the gRPC server."""
 
 connection = pika.BlockingConnection(
     pika.ConnectionParameters("localhost"),
 )
 rabbit_mq_channel = connection.channel()
+"""The RabbitMQ channel for sending messages."""
 
 rabbit_mq_channel.queue_declare(
     queue="rechnung_queue",
     durable=True,
     arguments={"x-queue-type": "quorum"},
 )
+"""The RabbitMQ queue for sending messages."""
 
 
 def run() -> None:
+    """Run the gRPC client."""
     function = sys.argv[1]
     response = None
     match function:
@@ -35,6 +39,12 @@ def run() -> None:
 
 
 def _create_rechnung(aussteller: str, empfaenger: str, betrag: float) -> None:
+    """Create a new rechnung.
+
+    :param aussteller: The name of the person or company issuing the invoice.
+    :param empfaenger: The name of the person or company receiving the invoice.
+    :param betrag: The amount of the invoice.
+    """
     with grpc.insecure_channel(GRPC_SERVER_ADDRESS) as grpc_channel:
         stub = rechnung_pb2_grpc.RechnungServiceStub(grpc_channel)
         response = stub.CreateRechnung(
@@ -63,6 +73,11 @@ def _create_rechnung(aussteller: str, empfaenger: str, betrag: float) -> None:
 
 
 def _get_rechnung_by_id(id: int) -> dict | None:
+    """Get a rechnung by its id.
+
+    :param id: The id of the rechnung to retrieve.
+    :return: The rechnung if found, otherwise None.
+    """
     with grpc.insecure_channel(GRPC_SERVER_ADDRESS) as grpc_channel:
         stub = rechnung_pb2_grpc.RechnungServiceStub(grpc_channel)
         response = stub.GetRechnungById(rechnung_pb2.RechnungIdRequest(id=id))
