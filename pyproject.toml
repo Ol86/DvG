@@ -3,7 +3,7 @@ name = "dvg"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 dependencies = [
     "camunda-orchestration-sdk>=9.0.1",
     "grpcio>=1.80.0",
@@ -16,6 +16,7 @@ server = "dvg.grpc_server:serve"
 client = "dvg.grpc_client:run"
 message = "dvg.message_server:run"
 proto = "dvg.proto:run"
+camunda = "dvg.camunda.job_worker:run"
 
 [build-system]
 requires = ["setuptools>=61.0"]
