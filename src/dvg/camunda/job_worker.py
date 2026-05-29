@@ -4,6 +4,7 @@ import asyncio
 from pathlib import Path
 
 import grpc
+import pika
 from camunda_orchestration_sdk import (
     ActivatedJobResult,
     CamundaAsyncClient,
@@ -77,9 +78,10 @@ class CamundaJobWorker:
         :param job_context: The context of the job being handled, containing the job key and variables.
         :return: A dictionary indicating the completion of the job.
         """
-        print(f"Received job with id: {job_context.job_key}")
-        variables = job_context.variables.to_dict()["vars"]
-        print(f"Job variables: {variables}")
+        job_context.log.debug(f"Received job with id: {job_context.job_key}")
+        variables = job_context.variables.to_dict()
+        job_context.log.debug(f"Job variables: {variables}")
+
         with grpc.insecure_channel(self.GRPC_SERVER_ADDRESS) as grpc_channel:
             stub = rechnung_pb2_grpc.RechnungServiceStub(grpc_channel)
             response = stub.CreateRechnung(
@@ -90,15 +92,51 @@ class CamundaJobWorker:
                     ausstellungsdatum=variables["Ausstellungsdatum"],
                 )
             )
-        print(f"Created rechnung with id {response.id} for job {job_context.job_key}")
+        job_context.log.debug(
+            f"Created rechnung with id {response.id} for job {job_context.job_key}"
+        )
 
-        return {"done": True}
+        variables.update({"RechnungId": response.id})
+
+        return {
+            **variables,
+            "done": True,
+        }
 
     async def handle_execute_payment(
         self, job_context: ConnectedJobContext
     ) -> dict[str, object]:
-        print(f"Received job with id: {job_context.job_key}")
-        print(f"Job variables: {job_context.variables.to_dict()}")
+        job_context.log.debug(f"Received job with id: {job_context.job_key}")
+        variables = job_context.variables.to_dict()
+        job_context.log.debug(f"Job variables: {variables}")
+
+        pika_connection = pika.BlockingConnection(
+            pika.ConnectionParameters("localhost"),
+        )
+        rabbit_mq_channel = pika_connection.channel()
+
+        rabbit_mq_channel.queue_declare(
+            queue="payment_queue",
+            durable=True,
+            arguments={"x-queue-type": "quorum"},
+        )
+        job_context.log.debug("Declared RabbitMQ queue: payment_queue")
+
+        message = {
+            "id": variables["RechnungId"],
+            "aussteller": variables["Aussteller"],
+            "empfaenger": variables["Empfaenger"],
+            "betrag": variables["Betrag"],
+        }
+        job_context.log.debug(f"Prepared message for RabbitMQ: {message}")
+
+        rabbit_mq_channel.basic_publish(
+            exchange="",
+            routing_key="payment_queue",
+            body=str(message),
+            properties=pika.BasicProperties(delivery_mode=pika.DeliveryMode.Persistent),
+        )
+        pika_connection.close()
         return {"done": True}
 
     async def run(self) -> None:
@@ -119,10 +157,10 @@ class CamundaJobWorker:
                 config=register_invoice_worker,
                 callback=self.handle_register_invoice,
             )
-            # client.create_job_worker(
-            #    config=execute_payment_worker,
-            #    callback=self.handle_execute_payment,
-            # )
+            client.create_job_worker(
+                config=execute_payment_worker,
+                callback=self.handle_execute_payment,
+            )
 
             # Run the worker indefinitely
             await client.run_workers()

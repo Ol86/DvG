@@ -35,7 +35,7 @@ def callback(ch, method, properties, body) -> None:
         stub = rechnung_pb2_grpc.RechnungServiceStub(grpc_channel)
         response = stub.MarkRechnungAsPaid(
             rechnung_pb2.RechnungPaiedRequest(
-                id=message["id"],
+                id=message["RechnungId"],
             )
         )
     print(f"Done processing message: {response.success}")
