@@ -8,6 +8,11 @@ Anschließend starten sie zunächst RabbitMQ, damit DvG eine Verbindung herstell
 ```bash
 docker run -d --hostname my-rabbit --name some-rabbit -p 5672:5672 -p 15672:15672 rabbitmq:3-management
 ```
+Alternativ kann man dies auch mithilfe von Docker compose tun:
+```bash
+cd extras
+docker-compose up
+```
 Nachdem RabbitMQ läuft, können Sie DvG starten, um die Funktionen zu testen.
 Hierfür starten sie in einem neuen Terminal den gRPC-Server:
 ```bash
@@ -19,6 +24,12 @@ In einem weiteren Terminal können sie dann den Message-server starten:
 uv run message
 ```
 
+Wenn man nun die JobWorker für Camunda laufen lassen möchte kann man dies mithilfe des folgenden Befehls tun:
+```bash
+uv run camunda
+```
+
+### Testen der grundlegenden Funktionen
 Um nun die Funktionen von DvG zu testen, können sie den gRPC-Client verwenden. 
 Hierfür starten sie in einem neuen Terminal den Client und rufen hier die gewünschten Funktionen auf, um die Kommunikation zwischen 
 den Komponenten zu testen. Die funktionen sind die folgenden:
