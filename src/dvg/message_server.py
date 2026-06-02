@@ -5,6 +5,9 @@ import grpc
 import pika
 
 from dvg.config import rechnung_pb2, rechnung_pb2_grpc
+from dvg.config.db import DatabaseHandler
+
+db_handler = DatabaseHandler()
 
 connection = pika.BlockingConnection(
     pika.ConnectionParameters("localhost"),
@@ -13,7 +16,7 @@ channel = connection.channel()
 """The RabbitMQ channel for consuming messages."""
 
 channel.queue_declare(
-    queue="rechnung_queue",
+    queue="payment_queue",
     durable=True,
     arguments={"x-queue-type": "quorum"},
 )
@@ -34,10 +37,11 @@ def callback(ch, method, properties, body) -> None:
     with grpc.insecure_channel("localhost:50051") as grpc_channel:
         stub = rechnung_pb2_grpc.RechnungServiceStub(grpc_channel)
         response = stub.MarkRechnungAsPaid(
-            rechnung_pb2.RechnungPaiedRequest(
-                id=message["RechnungId"],
+            rechnung_pb2.MarkRechnungAsPaidRequest(
+                id=message["id"],
             )
         )
+        db_handler.update_rechnung_as_paid(message["id"])
     print(f"Done processing message: {response.success}")
     ch.basic_ack(delivery_tag=method.delivery_tag)
 
@@ -45,6 +49,6 @@ def callback(ch, method, properties, body) -> None:
 def run() -> None:
     """Run the message server."""
     channel.basic_qos(prefetch_count=1)
-    channel.basic_consume(queue="rechnung_queue", on_message_callback=callback)
+    channel.basic_consume(queue="payment_queue", on_message_callback=callback)
     print("Waiting for messages. To exit press CTRL+C")
     channel.start_consuming()
