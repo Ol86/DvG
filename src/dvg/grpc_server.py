@@ -24,7 +24,13 @@ class RechnungService(rechnung_pb2_grpc.RechnungServiceServicer):
         :param context: The gRPC context for handling the request.
         :return: A gRPC response containing the ID of the created rechnung.
         """
-        id = _create_rechnung(request.aussteller, request.empfaenger, request.betrag)
+        id = _create_rechnung(
+            request.rechnungsnummer,
+            request.aussteller,
+            request.kundennummer,
+            request.empfaenger,
+            request.betrag,
+        )
         return rechnung_pb2.RechnungCreateResponse(id=id)
 
     def GetRechnungById(
@@ -85,7 +91,9 @@ def _init_db() -> None:
         """
         CREATE TABLE IF NOT EXISTS rechnungen (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            rechnungsnummer TEXT NOT NULL,
             aussteller TEXT NOT NULL,
+            kundennummer TEXT NOT NULL,
             empfaenger TEXT NOT NULL,
             betrag REAL NOT NULL,
             ist_bezahlt BOOLEAN NOT NULL DEFAULT 0,
@@ -97,7 +105,13 @@ def _init_db() -> None:
     conn.close()
 
 
-def _create_rechnung(aussteller: str, empfaenger: str, betrag: float) -> int | None:
+def _create_rechnung(
+    rechnungsnummer: str,
+    aussteller: str,
+    kundenummer: str,
+    empfaenger: str,
+    betrag: float,
+) -> int | None:
     """Create a new rechnung in the database.
 
     :param aussteller: The name of the person or company issuing the invoice.
@@ -108,8 +122,15 @@ def _create_rechnung(aussteller: str, empfaenger: str, betrag: float) -> int | N
     conn = sqlite3.connect(DB_URL)
     cursor = conn.cursor()
     db = cursor.execute(
-        "INSERT INTO rechnungen (aussteller, empfaenger, betrag, ausstellungsdatum) VALUES (?, ?, ?, ?)",
-        (aussteller, empfaenger, betrag, datetime.now().date()),
+        "INSERT INTO rechnungen (rechnungsnummer, aussteller, kundennummer, empfaenger, betrag, ausstellungsdatum) VALUES (?, ?, ?, ?, ?, ?)",
+        (
+            rechnungsnummer,
+            aussteller,
+            kundenummer,
+            empfaenger,
+            betrag,
+            datetime.now().date(),
+        ),
     )
     conn.commit()
     conn.close()
@@ -129,11 +150,13 @@ def _get_rechnung_by_id(rechnung_id: int) -> dict:
     conn.close()
     if row:
         return {
-            "aussteller": row[1],
-            "empfaenger": row[2],
-            "betrag": row[3],
-            "ausstellungsdatum": row[4],
-            "ist_bezahlt": bool(row[5]),
+            "rechnungsnummer": row[1],
+            "aussteller": row[2],
+            "kundennummer": row[3],
+            "empfaenger": row[4],
+            "betrag": row[5],
+            "ausstellungsdatum": row[6],
+            "ist_bezahlt": bool(row[7]),
         }
     return {}
 
@@ -148,11 +171,13 @@ def _get_all_rechnungen() -> list:
     return [
         {
             "id": row[0],
-            "aussteller": row[1],
-            "empfaenger": row[2],
-            "betrag": row[3],
-            "ausstellungsdatum": row[4],
-            "ist_bezahlt": bool(row[5]),
+            "rechnungsnummer": row[1],
+            "aussteller": row[2],
+            "kundennummer": row[3],
+            "empfaenger": row[4],
+            "betrag": row[5],
+            "ausstellungsdatum": row[6],
+            "ist_bezahlt": bool(row[7]),
         }
         for row in rows
     ]

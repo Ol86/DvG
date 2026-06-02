@@ -86,7 +86,9 @@ class CamundaJobWorker:
             stub = rechnung_pb2_grpc.RechnungServiceStub(grpc_channel)
             response = stub.CreateRechnung(
                 rechnung_pb2.RechnungCreateRequest(
+                    rechnungsnummer=variables["Rechnungsnummer"],
                     aussteller=variables["Aussteller"],
+                    kundennummer=variables["Kundennummer"],
                     empfaenger=variables["Empfaenger"],
                     betrag=variables["Betrag"],
                     ausstellungsdatum=variables["Ausstellungsdatum"],

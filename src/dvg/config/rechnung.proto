@@ -10,11 +10,13 @@ service RechnungService {
 
 message RechnungCreateRequest {
   int32 id = 1;
-  string aussteller = 2;
-  string empfaenger = 3;
-  double betrag = 4;
-  string ausstellungsdatum = 5;
-  bool ist_bezahlt = 6;
+  string rechnungsnummer = 2;
+  string aussteller = 3;
+  string kundennummer = 4;
+  string empfaenger = 5;
+  double betrag = 6;
+  string ausstellungsdatum = 7;
+  bool ist_bezahlt = 8;
 }
 
 message RechnungCreateResponse {
