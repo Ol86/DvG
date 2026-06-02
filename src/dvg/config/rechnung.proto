@@ -3,12 +3,12 @@ syntax = "proto3";
 package config;
 
 service RechnungService {
-  rpc CreateRechnung(RechnungCreateRequest) returns (RechnungCreateResponse);
-  rpc GetRechnungById(RechnungIdRequest) returns (RechnungIdResponse);
-  rpc MarkRechnungAsPaid(RechnungPaiedRequest) returns (RechnungPaiedResponse);
+  rpc CreateRechnung(CreateRechnungRequest) returns (CreateRechnungResponse);
+  rpc CreateRechnungsposition(CreateRechnungspositionRequest) returns (CreateRechnungspositionResponse);
+  rpc MarkRechnungAsPaid(MarkRechnungAsPaidRequest) returns (MarkRechnungAsPaidResponse);
 }
 
-message RechnungCreateRequest {
+message CreateRechnungRequest {
   int32 id = 1;
   string rechnungsnummer = 2;
   string aussteller = 3;
@@ -19,26 +19,28 @@ message RechnungCreateRequest {
   bool ist_bezahlt = 8;
 }
 
-message RechnungCreateResponse {
+message CreateRechnungResponse {
   int32 id = 1;
 }
 
-message RechnungIdRequest {
+message CreateRechnungspositionRequest {
+  int32 id = 1;
+  int32 rechnung_id = 2;
+  int32 rechnungsposition = 3;
+  string beschreibung = 4;
+  int32 menge = 5;
+  string einheit = 6;
+  double einzelpreis = 7;
+}
+
+message CreateRechnungspositionResponse {
   int32 id = 1;
 }
 
-message RechnungIdResponse {
-  string aussteller = 1;
-  string empfaenger = 2;
-  double betrag = 3;
-  string ausstellungsdatum = 4;
-  bool ist_bezahlt = 5;
-}
-
-message RechnungPaiedRequest {
+message MarkRechnungAsPaidRequest {
   int32 id = 1;
 }
 
-message RechnungPaiedResponse {
+message MarkRechnungAsPaidResponse {
   bool success = 1;
 }

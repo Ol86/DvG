@@ -85,7 +85,7 @@ class CamundaJobWorker:
         with grpc.insecure_channel(self.GRPC_SERVER_ADDRESS) as grpc_channel:
             stub = rechnung_pb2_grpc.RechnungServiceStub(grpc_channel)
             response = stub.CreateRechnung(
-                rechnung_pb2.RechnungCreateRequest(
+                rechnung_pb2.CreateRechnungRequest(
                     rechnungsnummer=variables["Rechnungsnummer"],
                     aussteller=variables["Aussteller"],
                     kundennummer=variables["Kundennummer"],
@@ -94,6 +94,19 @@ class CamundaJobWorker:
                     ausstellungsdatum=variables["Ausstellungsdatum"],
                 )
             )
+            rechnungspositionen = variables.get("Rechnungspositionen", [])
+            if rechnungspositionen:
+                for position in range(0, len(rechnungspositionen)):
+                    stub.CreateRechnungsposition(
+                        rechnung_pb2.CreateRechnungspositionRequest(
+                            rechnung_id=response.id,
+                            rechnungsposition=position + 1,
+                            beschreibung=rechnungspositionen[position]["Beschreibung"],
+                            menge=rechnungspositionen[position]["Menge"],
+                            einheit=rechnungspositionen[position]["Einheit"],
+                            einzelpreis=rechnungspositionen[position]["Einzelpreis"],
+                        )
+                    )
         job_context.log.debug(
             f"Created rechnung with id {response.id} for job {job_context.job_key}"
         )
@@ -126,9 +139,6 @@ class CamundaJobWorker:
 
         message = {
             "id": variables["RechnungId"],
-            "aussteller": variables["Aussteller"],
-            "empfaenger": variables["Empfaenger"],
-            "betrag": variables["Betrag"],
         }
         job_context.log.debug(f"Prepared message for RabbitMQ: {message}")
 

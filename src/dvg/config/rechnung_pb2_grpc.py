@@ -36,18 +36,18 @@ class RechnungServiceStub(object):
         """
         self.CreateRechnung = channel.unary_unary(
                 '/config.RechnungService/CreateRechnung',
-                request_serializer=dvg_dot_config_dot_rechnung__pb2.RechnungCreateRequest.SerializeToString,
-                response_deserializer=dvg_dot_config_dot_rechnung__pb2.RechnungCreateResponse.FromString,
+                request_serializer=dvg_dot_config_dot_rechnung__pb2.CreateRechnungRequest.SerializeToString,
+                response_deserializer=dvg_dot_config_dot_rechnung__pb2.CreateRechnungResponse.FromString,
                 _registered_method=True)
-        self.GetRechnungById = channel.unary_unary(
-                '/config.RechnungService/GetRechnungById',
-                request_serializer=dvg_dot_config_dot_rechnung__pb2.RechnungIdRequest.SerializeToString,
-                response_deserializer=dvg_dot_config_dot_rechnung__pb2.RechnungIdResponse.FromString,
+        self.CreateRechnungsposition = channel.unary_unary(
+                '/config.RechnungService/CreateRechnungsposition',
+                request_serializer=dvg_dot_config_dot_rechnung__pb2.CreateRechnungspositionRequest.SerializeToString,
+                response_deserializer=dvg_dot_config_dot_rechnung__pb2.CreateRechnungspositionResponse.FromString,
                 _registered_method=True)
         self.MarkRechnungAsPaid = channel.unary_unary(
                 '/config.RechnungService/MarkRechnungAsPaid',
-                request_serializer=dvg_dot_config_dot_rechnung__pb2.RechnungPaiedRequest.SerializeToString,
-                response_deserializer=dvg_dot_config_dot_rechnung__pb2.RechnungPaiedResponse.FromString,
+                request_serializer=dvg_dot_config_dot_rechnung__pb2.MarkRechnungAsPaidRequest.SerializeToString,
+                response_deserializer=dvg_dot_config_dot_rechnung__pb2.MarkRechnungAsPaidResponse.FromString,
                 _registered_method=True)
 
 
@@ -60,7 +60,7 @@ class RechnungServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetRechnungById(self, request, context):
+    def CreateRechnungsposition(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -77,18 +77,18 @@ def add_RechnungServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'CreateRechnung': grpc.unary_unary_rpc_method_handler(
                     servicer.CreateRechnung,
-                    request_deserializer=dvg_dot_config_dot_rechnung__pb2.RechnungCreateRequest.FromString,
-                    response_serializer=dvg_dot_config_dot_rechnung__pb2.RechnungCreateResponse.SerializeToString,
+                    request_deserializer=dvg_dot_config_dot_rechnung__pb2.CreateRechnungRequest.FromString,
+                    response_serializer=dvg_dot_config_dot_rechnung__pb2.CreateRechnungResponse.SerializeToString,
             ),
-            'GetRechnungById': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetRechnungById,
-                    request_deserializer=dvg_dot_config_dot_rechnung__pb2.RechnungIdRequest.FromString,
-                    response_serializer=dvg_dot_config_dot_rechnung__pb2.RechnungIdResponse.SerializeToString,
+            'CreateRechnungsposition': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateRechnungsposition,
+                    request_deserializer=dvg_dot_config_dot_rechnung__pb2.CreateRechnungspositionRequest.FromString,
+                    response_serializer=dvg_dot_config_dot_rechnung__pb2.CreateRechnungspositionResponse.SerializeToString,
             ),
             'MarkRechnungAsPaid': grpc.unary_unary_rpc_method_handler(
                     servicer.MarkRechnungAsPaid,
-                    request_deserializer=dvg_dot_config_dot_rechnung__pb2.RechnungPaiedRequest.FromString,
-                    response_serializer=dvg_dot_config_dot_rechnung__pb2.RechnungPaiedResponse.SerializeToString,
+                    request_deserializer=dvg_dot_config_dot_rechnung__pb2.MarkRechnungAsPaidRequest.FromString,
+                    response_serializer=dvg_dot_config_dot_rechnung__pb2.MarkRechnungAsPaidResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -116,8 +116,8 @@ class RechnungService(object):
             request,
             target,
             '/config.RechnungService/CreateRechnung',
-            dvg_dot_config_dot_rechnung__pb2.RechnungCreateRequest.SerializeToString,
-            dvg_dot_config_dot_rechnung__pb2.RechnungCreateResponse.FromString,
+            dvg_dot_config_dot_rechnung__pb2.CreateRechnungRequest.SerializeToString,
+            dvg_dot_config_dot_rechnung__pb2.CreateRechnungResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -129,7 +129,7 @@ class RechnungService(object):
             _registered_method=True)
 
     @staticmethod
-    def GetRechnungById(request,
+    def CreateRechnungsposition(request,
             target,
             options=(),
             channel_credentials=None,
@@ -142,9 +142,9 @@ class RechnungService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/config.RechnungService/GetRechnungById',
-            dvg_dot_config_dot_rechnung__pb2.RechnungIdRequest.SerializeToString,
-            dvg_dot_config_dot_rechnung__pb2.RechnungIdResponse.FromString,
+            '/config.RechnungService/CreateRechnungsposition',
+            dvg_dot_config_dot_rechnung__pb2.CreateRechnungspositionRequest.SerializeToString,
+            dvg_dot_config_dot_rechnung__pb2.CreateRechnungspositionResponse.FromString,
             options,
             channel_credentials,
             insecure,
@@ -170,8 +170,8 @@ class RechnungService(object):
             request,
             target,
             '/config.RechnungService/MarkRechnungAsPaid',
-            dvg_dot_config_dot_rechnung__pb2.RechnungPaiedRequest.SerializeToString,
-            dvg_dot_config_dot_rechnung__pb2.RechnungPaiedResponse.FromString,
+            dvg_dot_config_dot_rechnung__pb2.MarkRechnungAsPaidRequest.SerializeToString,
+            dvg_dot_config_dot_rechnung__pb2.MarkRechnungAsPaidResponse.FromString,
             options,
             channel_credentials,
             insecure,

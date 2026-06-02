@@ -24,25 +24,25 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19\x64vg/config/rechnung.proto\x12\x06\x63onfig\"\xba\x01\n\x15RechnungCreateRequest\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x17\n\x0frechnungsnummer\x18\x02 \x01(\t\x12\x12\n\naussteller\x18\x03 \x01(\t\x12\x14\n\x0ckundennummer\x18\x04 \x01(\t\x12\x12\n\nempfaenger\x18\x05 \x01(\t\x12\x0e\n\x06\x62\x65trag\x18\x06 \x01(\x01\x12\x19\n\x11\x61usstellungsdatum\x18\x07 \x01(\t\x12\x13\n\x0bist_bezahlt\x18\x08 \x01(\x08\"$\n\x16RechnungCreateResponse\x12\n\n\x02id\x18\x01 \x01(\x05\"\x1f\n\x11RechnungIdRequest\x12\n\n\x02id\x18\x01 \x01(\x05\"|\n\x12RechnungIdResponse\x12\x12\n\naussteller\x18\x01 \x01(\t\x12\x12\n\nempfaenger\x18\x02 \x01(\t\x12\x0e\n\x06\x62\x65trag\x18\x03 \x01(\x01\x12\x19\n\x11\x61usstellungsdatum\x18\x04 \x01(\t\x12\x13\n\x0bist_bezahlt\x18\x05 \x01(\x08\"\"\n\x14RechnungPaiedRequest\x12\n\n\x02id\x18\x01 \x01(\x05\"(\n\x15RechnungPaiedResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\xff\x01\n\x0fRechnungService\x12O\n\x0e\x43reateRechnung\x12\x1d.config.RechnungCreateRequest\x1a\x1e.config.RechnungCreateResponse\x12H\n\x0fGetRechnungById\x12\x19.config.RechnungIdRequest\x1a\x1a.config.RechnungIdResponse\x12Q\n\x12MarkRechnungAsPaid\x12\x1c.config.RechnungPaiedRequest\x1a\x1d.config.RechnungPaiedResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x19\x64vg/config/rechnung.proto\x12\x06\x63onfig\"\xba\x01\n\x15\x43reateRechnungRequest\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x17\n\x0frechnungsnummer\x18\x02 \x01(\t\x12\x12\n\naussteller\x18\x03 \x01(\t\x12\x14\n\x0ckundennummer\x18\x04 \x01(\t\x12\x12\n\nempfaenger\x18\x05 \x01(\t\x12\x0e\n\x06\x62\x65trag\x18\x06 \x01(\x01\x12\x19\n\x11\x61usstellungsdatum\x18\x07 \x01(\t\x12\x13\n\x0bist_bezahlt\x18\x08 \x01(\x08\"$\n\x16\x43reateRechnungResponse\x12\n\n\x02id\x18\x01 \x01(\x05\"\xa7\x01\n\x1e\x43reateRechnungspositionRequest\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x13\n\x0brechnung_id\x18\x02 \x01(\x05\x12\x19\n\x11rechnungsposition\x18\x03 \x01(\x05\x12\x14\n\x0c\x62\x65schreibung\x18\x04 \x01(\t\x12\r\n\x05menge\x18\x05 \x01(\x05\x12\x0f\n\x07\x65inheit\x18\x06 \x01(\t\x12\x13\n\x0b\x65inzelpreis\x18\x07 \x01(\x01\"-\n\x1f\x43reateRechnungspositionResponse\x12\n\n\x02id\x18\x01 \x01(\x05\"\'\n\x19MarkRechnungAsPaidRequest\x12\n\n\x02id\x18\x01 \x01(\x05\"-\n\x1aMarkRechnungAsPaidResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x32\xab\x02\n\x0fRechnungService\x12O\n\x0e\x43reateRechnung\x12\x1d.config.CreateRechnungRequest\x1a\x1e.config.CreateRechnungResponse\x12j\n\x17\x43reateRechnungsposition\x12&.config.CreateRechnungspositionRequest\x1a\'.config.CreateRechnungspositionResponse\x12[\n\x12MarkRechnungAsPaid\x12!.config.MarkRechnungAsPaidRequest\x1a\".config.MarkRechnungAsPaidResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'dvg.config.rechnung_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_RECHNUNGCREATEREQUEST']._serialized_start=38
-  _globals['_RECHNUNGCREATEREQUEST']._serialized_end=224
-  _globals['_RECHNUNGCREATERESPONSE']._serialized_start=226
-  _globals['_RECHNUNGCREATERESPONSE']._serialized_end=262
-  _globals['_RECHNUNGIDREQUEST']._serialized_start=264
-  _globals['_RECHNUNGIDREQUEST']._serialized_end=295
-  _globals['_RECHNUNGIDRESPONSE']._serialized_start=297
-  _globals['_RECHNUNGIDRESPONSE']._serialized_end=421
-  _globals['_RECHNUNGPAIEDREQUEST']._serialized_start=423
-  _globals['_RECHNUNGPAIEDREQUEST']._serialized_end=457
-  _globals['_RECHNUNGPAIEDRESPONSE']._serialized_start=459
-  _globals['_RECHNUNGPAIEDRESPONSE']._serialized_end=499
-  _globals['_RECHNUNGSERVICE']._serialized_start=502
-  _globals['_RECHNUNGSERVICE']._serialized_end=757
+  _globals['_CREATERECHNUNGREQUEST']._serialized_start=38
+  _globals['_CREATERECHNUNGREQUEST']._serialized_end=224
+  _globals['_CREATERECHNUNGRESPONSE']._serialized_start=226
+  _globals['_CREATERECHNUNGRESPONSE']._serialized_end=262
+  _globals['_CREATERECHNUNGSPOSITIONREQUEST']._serialized_start=265
+  _globals['_CREATERECHNUNGSPOSITIONREQUEST']._serialized_end=432
+  _globals['_CREATERECHNUNGSPOSITIONRESPONSE']._serialized_start=434
+  _globals['_CREATERECHNUNGSPOSITIONRESPONSE']._serialized_end=479
+  _globals['_MARKRECHNUNGASPAIDREQUEST']._serialized_start=481
+  _globals['_MARKRECHNUNGASPAIDREQUEST']._serialized_end=520
+  _globals['_MARKRECHNUNGASPAIDRESPONSE']._serialized_start=522
+  _globals['_MARKRECHNUNGASPAIDRESPONSE']._serialized_end=567
+  _globals['_RECHNUNGSERVICE']._serialized_start=570
+  _globals['_RECHNUNGSERVICE']._serialized_end=869
 # @@protoc_insertion_point(module_scope)
