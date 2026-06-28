@@ -5,6 +5,7 @@ from pathlib import Path
 
 import grpc
 import pika
+import requests
 from camunda_orchestration_sdk import (
     ActivatedJobResult,
     CamundaAsyncClient,
@@ -151,6 +152,30 @@ class CamundaJobWorker:
         pika_connection.close()
         return {"done": True}
 
+    async def handle_extract_data_n8n(
+        self, job_context: ConnectedJobContext
+    ) -> dict[str, object]:
+        job_context.log.debug(f"Starte n8n Extraktion für Job: {job_context.job_key}")
+        variables = job_context.variables.to_dict()
+
+        n8n_url = "http://localhost:5678/webhook/c1688700-b19c-484f-83ef-190c38c651e2"
+
+        attachments = variables.get("attachments", [])
+        pdf_inhalt = attachments[0].get("content", "") if attachments else ""
+
+        payload = {
+            "prozessId": job_context.job_key, 
+            "pdf_base64": pdf_inhalt 
+        }
+
+        try:
+            requests.post(n8n_url, json=payload)
+            job_context.log.debug("Daten erfolgreich an n8n gesendet.")
+        except Exception as e:
+            job_context.log.error(f"Fehler beim Senden an n8n: {e}")
+
+        return {"done": True}
+
     async def run(self) -> None:
         """Run the Camunda job worker, listening for jobs and handling them asynchronously."""
         async with self.client as client:
@@ -163,6 +188,10 @@ class CamundaJobWorker:
                 job_type="ExecutePayment",
                 job_timeout_milliseconds=self.job_timeout_milliseconds,
             )
+            extract_data_n8n_worker = WorkerConfig(
+                job_type="ExtractDataWithN8n",
+                job_timeout_milliseconds=self.job_timeout_milliseconds,
+            )
 
             # Create the job worker and register the job handler
             client.create_job_worker(
@@ -172,6 +201,10 @@ class CamundaJobWorker:
             client.create_job_worker(
                 config=execute_payment_worker,
                 callback=self.handle_execute_payment,
+            )
+            client.create_job_worker(
+                config=extract_data_n8n_worker,
+                callback=self.handle_extract_data_n8n,
             )
 
             # Run the worker indefinitely
