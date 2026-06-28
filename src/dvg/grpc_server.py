@@ -26,6 +26,7 @@ class RechnungService(rechnung_pb2_grpc.RechnungServiceServicer):
         :param context: The gRPC context for handling the request.
         :return: A gRPC response containing the ID of the created rechnung.
         """
+        print(f"[CreateRechnung] - Create Rechnung with request: {request}")
         rechnung = {
             "rechnungsnummer": request.rechnungsnummer,
             "aussteller": request.aussteller,
@@ -42,6 +43,7 @@ class RechnungService(rechnung_pb2_grpc.RechnungServiceServicer):
         id = self.database_handler.insert_rechnung(
             rechnung=rechnung,
         )
+        print(f"[CreateRechnungsPosition] - Created Rechnung with id:{id}")
         return rechnung_pb2.CreateRechnungResponse(id=id)
 
     def CreateRechnungsposition(
@@ -55,6 +57,9 @@ class RechnungService(rechnung_pb2_grpc.RechnungServiceServicer):
         :param context: The gRPC context for handling the request.
         :return: A gRPC response containing the ID of the created rechnungsposition.
         """
+        print(
+            f"[CreateRechnungsPositio] - Create Rechnungsposition with request: {request}"
+        )
         rechnungsposition = {
             "rechnungsposition": request.rechnungsposition,
             "beschreibung": request.beschreibung,
@@ -66,6 +71,7 @@ class RechnungService(rechnung_pb2_grpc.RechnungServiceServicer):
             rechnung_id=request.rechnung_id,
             rechnungsposition=rechnungsposition,
         )
+        print(f"[CreateRechnungsPosition] - Created RechnungsPosition with id:{id}")
         return rechnung_pb2.CreateRechnungspositionResponse(id=id)
 
     def MarkRechnungAsPaid(
@@ -79,6 +85,7 @@ class RechnungService(rechnung_pb2_grpc.RechnungServiceServicer):
         :param context: The gRPC context for handling the request.
         :return: A gRPC response indicating the success of the operation.
         """
+        print(f"[MarkRechnungAsPaid] - Marking Rechnung with id: {request.id} as paid")
         self.database_handler.update_rechnung_as_paid(
             rechnung_id=request.id,
         )
