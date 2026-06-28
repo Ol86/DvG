@@ -30,10 +30,10 @@ class RechnungService(rechnung_pb2_grpc.RechnungServiceServicer):
             "rechnungsnummer": request.rechnungsnummer,
             "aussteller": request.aussteller,
             "kundennummer": request.kundennummer,
-            "empfaenger": request.empfaenger,
-            "betrag": request.betrag,
+            "zahlungsziel": request.zahlungsziel,
+            "bemerkungen": request.bemerkungen,
             "ausstellungsdatum": datetime.strptime(
-                request.ausstellungsdatum, "%Y-%m-%d"
+                request.ausstellungsdatum, "%d.%m.%Y"
             ).date()
             if request.ausstellungsdatum
             else datetime.now().date(),

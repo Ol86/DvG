@@ -1,6 +1,7 @@
 """The CamundaJobWorker class provides a simple interface for creating and running a Camunda job worker."""
 
 import asyncio
+import uuid
 from pathlib import Path
 
 import grpc
@@ -81,38 +82,53 @@ class CamundaJobWorker:
         """
         job_context.log.debug(f"Received job with id: {job_context.job_key}")
         variables = job_context.variables.to_dict()
+        rechnungsnummer = f"R-${uuid.uuid4()}"
+        kundennummer = f"K-${uuid.uuid4()}"
         job_context.log.debug(f"Job variables: {variables}")
 
         with grpc.insecure_channel(self.GRPC_SERVER_ADDRESS) as grpc_channel:
             stub = rechnung_pb2_grpc.RechnungServiceStub(grpc_channel)
             response = stub.CreateRechnung(
                 rechnung_pb2.CreateRechnungRequest(
-                    rechnungsnummer=variables["Rechnungsnummer"],
-                    aussteller=variables["Aussteller"],
-                    kundennummer=variables["Kundennummer"],
-                    empfaenger=variables["Empfaenger"],
-                    betrag=variables["Betrag"],
+                    rechnungsnummer=rechnungsnummer,
                     ausstellungsdatum=variables["Ausstellungsdatum"],
+                    aussteller=variables["Aussteller"],
+                    kundennummer=kundennummer,
+                    zahlungsziel=variables["Zahlungsziel"],
+                    bemerkungen=variables["Bemerkungen"],
                 )
             )
             rechnungspositionen = variables.get("Rechnungspositionen", [])
             if rechnungspositionen:
                 for position in range(0, len(rechnungspositionen)):
+                    try:
+                        einheit = rechnungspositionen[position]["Einheit"]
+                    except Exception as e:
+                        einheit = "Stück"
+
                     stub.CreateRechnungsposition(
                         rechnung_pb2.CreateRechnungspositionRequest(
                             rechnung_id=response.id,
                             rechnungsposition=position + 1,
                             beschreibung=rechnungspositionen[position]["Beschreibung"],
-                            menge=rechnungspositionen[position]["Menge"],
-                            einheit=rechnungspositionen[position]["Einheit"],
-                            einzelpreis=rechnungspositionen[position]["Einzelpreis"],
+                            menge=int(rechnungspositionen[position]["Menge"]),
+                            einheit=einheit,
+                            einzelpreis=float(
+                                rechnungspositionen[position]["Einzelpreis"]
+                            ),
                         )
                     )
         job_context.log.debug(
             f"Created rechnung with id {response.id} for job {job_context.job_key}"
         )
 
-        variables.update({"RechnungId": response.id})
+        variables.update(
+            {
+                "Rechnungsnummer": rechnungsnummer,
+                "Kundennummer": kundennummer,
+                "RechnungId": response.id,
+            }
+        )
 
         return {
             **variables,
@@ -163,10 +179,7 @@ class CamundaJobWorker:
         attachments = variables.get("attachments", [])
         pdf_inhalt = attachments[0].get("content", "") if attachments else ""
 
-        payload = {
-            "prozessId": job_context.job_key, 
-            "pdf_base64": pdf_inhalt 
-        }
+        payload = {"prozessId": job_context.job_key, "pdf_base64": pdf_inhalt}
 
         try:
             requests.post(n8n_url, json=payload)

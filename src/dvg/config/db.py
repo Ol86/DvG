@@ -25,21 +25,21 @@ class DatabaseHandler:
                 """
                 INSERT INTO rechnungen (
                     rechnungsnummer,
+                    ausstellungsdatum,
                     aussteller,
                     kundennummer,
-                    empfaenger,
-                    betrag,
-                    ausstellungsdatum,
+                    zahlungsziel,
+                    bemerkungen,
                     ist_bezahlt
                 ) VALUES (?, ?, ?, ?, ?, ?, ?)
                 """,
                 (
                     rechnung["rechnungsnummer"],
+                    rechnung["ausstellungsdatum"],
                     rechnung["aussteller"],
                     rechnung["kundennummer"],
-                    rechnung["empfaenger"],
-                    rechnung["betrag"],
-                    rechnung["ausstellungsdatum"],
+                    rechnung["zahlungsziel"],
+                    rechnung["bemerkungen"],
                     rechnung["ist_bezahlt"],
                 ),
             )
@@ -112,11 +112,11 @@ class DatabaseHandler:
                 CREATE TABLE IF NOT EXISTS rechnungen (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     rechnungsnummer TEXT NOT NULL,
+                    ausstellungsdatum TEXT NOT NULL,
                     aussteller TEXT NOT NULL,
                     kundennummer TEXT NOT NULL,
-                    empfaenger TEXT NOT NULL,
-                    betrag REAL NOT NULL,
-                    ausstellungsdatum TEXT NOT NULL,
+                    zahlungsziel TEXT NOT NULL,
+                    bemerkungen TEXT NOT NULL,
                     ist_bezahlt INTEGER NOT NULL DEFAULT 0
                 )
                 """
